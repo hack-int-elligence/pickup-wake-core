@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SessionDB" Class="SessionDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\SessionDB.mdf;Integrated Security=True;client Instance=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SessionDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tblwakeupnetwork" Member="tblwakeupnetworks">
+    <Type Name="tblwakeupnetwork">
+      <Column Name="wakeupnetworkID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="wakeupnetworkPassword" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="wakeupnetworkName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="NeedPassword" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="MaxclientNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsLock" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="tblwakeupnetwork_tblTalker" Member="tblTalkers" ThisKey="wakeupnetworkID" OtherKey="wakeupnetworkID" Type="tblTalker" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblTalker" Member="tblTalkers">
+    <Type Name="tblTalker">
+      <Column Name="TalkerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SessionID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="wakeupnetworkID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CheckInTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CheckOutTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="true" />
+      <Association Name="tblTalker_tblPacketPool" Member="tblPacketPools" ThisKey="TalkerID" OtherKey="talkerID" Type="tblPacketPool" />
+      <Association Name="tblwakeupnetwork_tblTalker" Member="tblwakeupnetwork" ThisKey="wakeupnetworkID" OtherKey="wakeupnetworkID" Type="tblwakeupnetwork" IsForeignKey="true" />
+      <Association Name="tblSession_tblTalker" Member="tblSession" ThisKey="SessionID" OtherKey="UID" Type="tblSession" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblSession" Member="tblSessions">
+    <Type Name="tblSession">
+      <Column Name="UID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SessionID" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="IP" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="clientAlias" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="tblSession_tblTalker" Member="tblTalkers" ThisKey="UID" OtherKey="SessionID" Type="tblTalker" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblPacketPool" Member="tblPacketPools">
+    <Type Name="tblPacketPool">
+      <Column Name="PacketID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Packet" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="SendTime" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="talkerID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="tblTalker_tblPacketPool" Member="tblTalker" ThisKey="talkerID" OtherKey="TalkerID" Type="tblTalker" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
